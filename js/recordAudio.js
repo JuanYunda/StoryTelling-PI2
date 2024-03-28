@@ -15,16 +15,7 @@ recordButton.addEventListener('click', () => {
 
             mediaRecorder.addEventListener("stop", () => {
                 textArea.value = "Recording stopped";
-                // const audioBlob = new Blob(audioChunks);
-                // const audioUrl = URL.createObjectURL(audioBlob);
-                // const audio = new Audio(audioUrl);
-                // audio.play();
-                // const reader = new FileReader();
-                // reader.readAsDataURL(audioBlob);
-                // reader.onloadend = function () {
-                //     base64data = reader.result;
-                //     textArea.value = "base64data";
-                // }
+
             });
 
             setTimeout(() => {
