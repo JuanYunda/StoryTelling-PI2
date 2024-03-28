@@ -554,7 +554,11 @@ a:focus {
 .footer_section a {
   color: #fdfdfe;
 }
-
+  
+.transcriptionBox{
+  width: 600px;
+  height: 400px
+}
 
 
 /* end footer section*/

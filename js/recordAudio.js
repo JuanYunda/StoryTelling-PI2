@@ -3,15 +3,29 @@ const textArea = document.getElementById('textArea');
 const microphoneIcon = document.getElementById('microphone');
 const stopIcon = document.getElementById('stop');
 
+let mediaRecorder;
+let audioChunks = [];
+let isRecording = false;
 
 recordButton.addEventListener('click', () => {
+    if (!isRecording) {
+        startRecording();
+    } else {
+        stopRecording();
+    }
+});
+
+function startRecording() {
+    audioChunks = [];
+
     stopIcon.style.display = "block";
     microphoneIcon.style.display = "none";
+    isRecording = true;
+
     navigator.mediaDevices.getUserMedia({ audio: true })
         .then(stream => {
-            const mediaRecorder = new MediaRecorder(stream);
+            mediaRecorder = new MediaRecorder(stream);
             mediaRecorder.start();
-            const audioChunks = [];
 
             mediaRecorder.addEventListener("dataavailable", event => {
                 audioChunks.push(event.data);
@@ -20,12 +34,36 @@ recordButton.addEventListener('click', () => {
             mediaRecorder.addEventListener("stop", () => {
                 microphoneIcon.style.display = "block";
                 stopIcon.style.display = "none";
-                textArea.value = "Recording stopped";
+                isRecording = false;
 
+                sendAudioToServer();
             });
-
-            setTimeout(() => {
-                mediaRecorder.stop();
-            }, 3000);
         });
-});
+}
+
+function stopRecording() {
+    if (mediaRecorder && mediaRecorder.state === 'recording') {
+        mediaRecorder.stop();
+    }
+}
+
+function sendAudioToServer() {
+    const audioBlob = new Blob(audioChunks, { type: 'audio/wav' });
+
+    const formData = new FormData();
+    formData.append('audio', audioBlob);
+
+    fetch('http://localhost:8081/storytelling/transcript', {
+        method: 'POST',
+        body: formData
+    })
+    .then(response => response.json())
+    .then(data => {
+        console.log("respuesta obtenida: ", data, "\n trans", data.transcription )
+        textArea.value += `\n ${data.transcription}`;
+    })
+    .catch(error => {
+        console.error('Error:', error);
+        textArea.value = 'Error occurred while transcribing audio D:';
+    });
+}

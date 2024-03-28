@@ -1,6 +1,8 @@
 const express = require("express");
 const cors = require("cors");
 
+process.env.GOOGLE_APPLICATION_CREDENTIALS='academicsoftware.json'
+
 const app = express();
 //middlewares
 app.use(cors());
