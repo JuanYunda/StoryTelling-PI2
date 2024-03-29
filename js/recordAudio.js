@@ -2,10 +2,20 @@ const recordButton = document.getElementById('recordButton');
 const textArea = document.getElementById('textArea');
 const microphoneIcon = document.getElementById('microphone');
 const stopIcon = document.getElementById('stop');
+const readStoryButton = document.getElementById('readStoryButton');
 
 let mediaRecorder;
 let audioChunks = [];
 let isRecording = false;
+
+readStoryButton.addEventListener('click', () => {
+    recordButton.style.display = "none";
+    readStoryButton.style.display = "none";
+    const story = textArea.value;
+    const utterance = new SpeechSynthesisUtterance(story);
+    utterance.lang = 'es';
+    speechSynthesis.speak(utterance);
+});
 
 recordButton.addEventListener('click', () => {
     if (!isRecording) {
