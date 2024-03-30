@@ -1,27 +1,20 @@
 import { GoogleGenerativeAI } from "@google/generative-ai";
 const recordButton = document.getElementById('recordButton');
 const continueButton = document.getElementById('continueButton');
+const finishButton = document.getElementById('finishButton');
 const textArea = document.getElementById('textArea');
 const microphoneIcon = document.getElementById('microphone');
 const stopIcon = document.getElementById('stop');
-const continueText = document.getElementById('continue');
+const finishText = document.getElementById('finish');
 const restartText = document.getElementById('restart');
 
 let mediaRecorder;
 let audioChunks = [];
 let isRecording = false;
 let completed = false;
-
+let text = "";
 
 const genAI = new GoogleGenerativeAI("AIzaSyDOf0NoumfYp7JH53zpsl6TtDgg-E-j3nY");
-
-const cuentoInicial = `En el corazón del bosque encantado, vivía una pequeña ardilla llamada Nuka, famosa por su pelaje rojizo y su astucia. Un día, mientras recolectaba nueces para el invierno, Nuka se encontró con un pequeño polluelo que había caído de su nido. El polluelo, asustado y sin poder volar, piaba desconsoladamente.
-
-Nuka, con su corazón bondadoso, no pudo dejar al polluelo a su suerte. Decidió ayudarlo a regresar a su nido, ubicado en lo alto de un árbol frondoso. Nuka trepó con cuidado, esquivando ramas y sorteando obstáculos, con el polluelo a salvo en su pelaje.
-
-Sin embargo, al llegar al nido, Nuka se encontró con un problema: era demasiado alto para alcanzarlo sin ayuda. Desesperada, miró a su alrededor buscando una solución. De pronto, vio una bandada de gorriones que revoloteaban cerca. Nuka ideó un plan.`; 
-
-//textArea.value = cuentoInicial
 
 recordButton.addEventListener('click', () => {
     if (!isRecording) {
@@ -31,19 +24,51 @@ recordButton.addEventListener('click', () => {
     }
 });
 
-async function history() {
-    console.log(textArea.value);
-    const model = genAI.getGenerativeModel({ model: "gemini-pro"});
-    const prompt = "Agrega cuatro renglones a la historia" + textArea.value;
+async function history(final) {
+    if (final === false) {
+
+        console.log(textArea.value);
+        const model = genAI.getGenerativeModel({ model: "gemini-pro"});
+        const prompt = "Agrega cuatro renglones a la historia en prosa" + textArea.value;
   
-    const result = await model.generateContent(prompt);
-    const response = await result.response;
-    const text = response.text();
-    console.log(text);
+        const result = await model.generateContent(prompt);
+        const response = await result.response;
+        const text = response.text();
+        console.log(text);
+        textArea.value += "\n" + text;
+    }
+
+    else {
+        console.log(textArea.value);
+        const model = genAI.getGenerativeModel({ model: "gemini-pro"});
+        const prompt = "Termina en cuatro renglones la historia en prosa: " + textArea.value + "Responde y no vuelvas a contar la misma historia";
+  
+        const result = await model.generateContent(prompt);
+        const response = await result.response;
+        const text = response.text();
+        console.log(text);
+        textArea.value += "\n" + text;
+    }
   }
 
-continueButton.addEventListener('click', () => {
-    history();
+  continueButton.addEventListener('click', () => {
+    history(false);
+  })
+
+finishButton.addEventListener('click', () => {
+    if (!completed) {
+        history(true);
+        completed = !completed;
+        finishText.style.display = "none";
+        restartText.style.display = "block";
+    }
+
+    else {
+        completed = !completed;
+        restartText.style.display = "none";
+        finishText.style.display = "block";
+        textArea.value = "";
+    }
 });
 
 function startRecording() {
@@ -70,10 +95,6 @@ function startRecording() {
                 sendAudioToServer();
             });
         });
-        
-        completed = !completed
-        continueText.style.display = "none";
-        restartText.style.display = "block";
 }
 
 function stopRecording() {
