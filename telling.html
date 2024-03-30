@@ -91,7 +91,14 @@
 
   <script type="text/javascript" src="js/jquery-3.4.1.min.js"></script>
   <script type="text/javascript" src="js/bootstrap.js"></script>
-  <script type="module/" src="js/recordAudio.js"></script>
+  <script type="importmap">
+      {
+        "imports": {
+          "@google/generative-ai": "https://esm.run/@google/generative-ai"
+        }
+      }
+  </script>
+  <script type="module" src="js/recordAudio.js"></script>
 
 </body>
 

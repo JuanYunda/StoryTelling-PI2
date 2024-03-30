@@ -33,6 +33,7 @@ recordButton.addEventListener('click', () => {
 
 async function history() {
     console.log(textArea.value);
+    const model = genAI.getGenerativeModel({ model: "gemini-pro"});
     const prompt = "Agrega cuatro renglones a la historia" + textArea.value;
   
     const result = await model.generateContent(prompt);
