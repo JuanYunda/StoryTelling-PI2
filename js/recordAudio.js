@@ -7,6 +7,8 @@ const microphoneIcon = document.getElementById('microphone');
 const stopIcon = document.getElementById('stop');
 const finishText = document.getElementById('finish');
 const restartText = document.getElementById('restart');
+const exportButton = document.getElementById('exportButton');
+
 
 let mediaRecorder;
 let audioChunks = [];
@@ -125,3 +127,13 @@ function sendAudioToServer() {
 
 
 }
+
+exportButton.addEventListener('click', (event) => {
+    const text = textArea.value;
+    var json_string = JSON.stringify(text, undefined, 2);
+    var link = document.createElement('a');
+    link.download = 'StoryTellingHistoria.txt';
+    var blob = new Blob([json_string], {type: 'text/plain'});
+    link.href = window.URL.createObjectURL(blob);
+    link.click();
+})
