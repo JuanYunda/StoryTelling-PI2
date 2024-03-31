@@ -19,8 +19,8 @@ let text = "";
 const genAI = new GoogleGenerativeAI("AIzaSyDOf0NoumfYp7JH53zpsl6TtDgg-E-j3nY");
 
 readStoryButton.addEventListener('click', () => {
-    recordButton.style.display = "none";
-    readStoryButton.style.display = "none";
+    // recordButton.style.display = "none";
+    // readStoryButton.style.display = "none";
     const story = textArea.value;
     const utterance = new SpeechSynthesisUtterance(story);
     utterance.lang = 'es';
