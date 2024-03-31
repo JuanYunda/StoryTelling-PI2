@@ -8,7 +8,7 @@ const stopIcon = document.getElementById('stop');
 const finishText = document.getElementById('finish');
 const restartText = document.getElementById('restart');
 const exportButton = document.getElementById('exportButton');
-
+const readStoryButton = document.getElementById('readStoryButton');
 
 let mediaRecorder;
 let audioChunks = [];
@@ -17,6 +17,15 @@ let completed = false;
 let text = "";
 
 const genAI = new GoogleGenerativeAI("AIzaSyDOf0NoumfYp7JH53zpsl6TtDgg-E-j3nY");
+
+readStoryButton.addEventListener('click', () => {
+    recordButton.style.display = "none";
+    readStoryButton.style.display = "none";
+    const story = textArea.value;
+    const utterance = new SpeechSynthesisUtterance(story);
+    utterance.lang = 'es';
+    speechSynthesis.speak(utterance);
+});
 
 recordButton.addEventListener('click', () => {
     if (!isRecording) {
